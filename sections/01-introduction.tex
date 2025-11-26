@@ -1,15 +1,18 @@
 \section{Introduction}
+
+\subsection{Acoustic Event Classification}
 Acoustic event classification (AEC) is the task of estimating the posterior probabilities of multiple predefined event categories from an observed acoustic signal and outputs the most probable category.
 This technology is widely adopted in applications such as environmental monitoring, intelligent surveillance, and home automation.
 Significant progress in single-channel AEC has been achieved through the development of deep neural network (DNN)-based methods.
 In such methods, acoustic features like time-frequency representations are first extracted from raw audio signals and then provided as input to DNN models (e.g., CNNs and Transformers) to obtain class-posterior probabilities~\cite{kong2020pannslargescalepretrainedaudio,chen2022htsathierarchicaltokensemanticaudio, gong2021astaudiospectrogramtransformer}.
-In addition, considerable efforts have been devoted to implementing AEC methods on edge devices \cite{huang2024tinychirpbirdsongrecognition,Mohaimenuzzaman_2023_acdnet}.
+In addition, considerable efforts have been devoted to implementing AEC methods on edge devices~\cite{huang2024tinychirpbirdsongrecognition,Mohaimenuzzaman_2023_acdnet}.
 
 Besides spectral information from a single microphone, spatial information from a distributed array~\cite{zhang2024soundeventlocalizationclassification,stowell_detection_2015} improves AEC.
 Placing several microphones near sound sources raises the signal-to-noise ratio, and the distinct inter-microphone delays preserve clues needed to separate simultaneously occurring events.
 Fully exploiting these spatial information demands sample-level synchronization across channels. Because wireless microphones are inherently asynchronous, recent work has focused on blind time alignment~\cite{cherkassky_blind_2017}.
 Wireless transmission also restrict throughput: at 16 kHz/16-bit resolution each sensor yields approximately 32 kB of data per second, so many microphones can conflict with the available communication bandwidth and storage resources.
 
+\subsection{Blinky, a sound-to-light converter}
 Addressing these issues, a sound-to-light conversion device named a Blinky has been developed~\cite{scheibler_blinkies_2020, scheibler_blinkies_2018,ishii_real-time_2021, nishida_estimation_2022}.
 These Blinkies can convert acoustic signals into varying intensities
 of light via an inbuilt light-emitting diode (LED).
@@ -29,6 +32,7 @@ a DNN for sound-to-light conversion in an end-to-end manner.
 Nevertheless, Kinoshita's method requires backpropagation of the loss of AEC through the unknown, non-differentiable physical light transmission channel, rendering it impractical for training the DNN on real-world environments.
 Therefore, a critical challenge arises: how to transmit semantically discriminative features through severely bandwidth-limited channels while preserving Blinky’s practical deployment advantages.
 
+\subsubsection{Contributions}
 To overcome this challenge, in this paper, we propose a novel sound-to-light conversion method that does not require backpropagation through the physical transmission channel.
 For the proposed method,
 we first pre-train a lightweight autoencoder (AE) to encode audio signals into compact latent vectors while preserving their essential information, where artificial noise is injected into the latent vectors during training to enhance robustness against noise.

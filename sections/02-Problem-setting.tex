@@ -10,7 +10,7 @@ The AEC procedure using $N$ Blinkies consists of three sequential stages: on-dev
     \boldsymbol{z'}_i & = \mathrm{Transmit}(\boldsymbol{z}_i), \label{eq:ps_channel}                             \\
     \hat{y}           & = \mathrm{Classify}(\boldsymbol{z'}_1, \cdots, \boldsymbol{z}_N). \label{eq:ps_classify}
 \end{align}
-\input{sections/pdf-png-ref/proposal_and_conventional.tex}
+\input{sections/pdf-png-ref/AEC-Diagram.tex}
 As illustrated in Fig.~\ref{fig:proposed_system_diagram},
 the $i$-th Blinky first acquires an acoustic signal $\boldsymbol{x}_i$.
 The embedding function $\mathrm{Embed}(\cdot)$ on the Blinky maps the captured signal to a feature vector $\boldsymbol{z}_i \in \mathbb{R}^{L}$, which subsequently modulates the device's LEDs.
@@ -37,12 +37,14 @@ Within this framework, the central challenge is to design an embedding function 
 To date, two principal strategies have been explored.
 
 \paragraph{Sound Power}
-The simplest method defines $\mathrm{Embed}(\cdot)$ by mapping the raw waveform $\boldsymbol{x}(t)$ to its power: $\boldsymbol{z} = (x(1)^2, x(2)^2, \cdots, x(T)^2)^\top$.
-Although computationally negligible, the downsampling process in the camera discards most of the semantic information (e.g., timbre),
-resulting in insufficient performance on AEC tasks.
+\input{sections/pdf-png-ref/sound_power_approach.tex}
+
+As shown in~\ref{fig:sound_power_diagram}, the simplest method defines $\mathrm{Embed}(\cdot)$ by mapping the raw waveform $\boldsymbol{x}(t)$ to its power: $\boldsymbol{z} = (x(1)^2, x(2)^2, \cdots, x(T)^2)^\top$~\cite{scheibler_blinkies_2020}.
+Although computationally negligible, the downsampling process in the camera discards most of the semantic information (e.g., timbre), resulting in insufficient performance on AEC tasks.
 
 \paragraph{End-to-End Training Approach}
-To convey more discriminative features, Kinoshita et al.~\cite{kinoshita_end--end_2021} proposed using a DNN encoder for $\mathrm{Embed}(\cdot)$ and optimized both $\mathrm{Embed}(\cdot)$ and $\mathrm{Classify}(\cdot)$ (Eqs.~\ref{eq:ps_embedding} and \ref{eq:ps_classify}) in an end-to-end fashion.
+\input{sections/pdf-png-ref/end_to_end.tex}
+As shown in~\ref{fig:end_to_end}, to convey more discriminative features, Kinoshita et al.~\cite{kinoshita_end--end_2021} proposed using a DNN encoder for $\mathrm{Embed}(\cdot)$ and optimized both $\mathrm{Embed}(\cdot)$ and $\mathrm{Classify}(\cdot)$ (Eqs.~\ref{eq:ps_embedding} and \ref{eq:ps_classify}) in an end-to-end fashion.
 However, this strategy is impractical in real-world deployments:
 the transmit channel (Eq.~\ref{eq:ps_channel}) constitutes an unknown, non-differentiable physical process, thereby blocking gradient flow back to the on-device encoder.
 
