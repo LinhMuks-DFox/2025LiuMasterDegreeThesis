@@ -1,0 +1,8 @@
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{sections/pdf-png-ref/proposal_and_conventional.pdf}
+    \caption{Overview of the proposed framework.
+        \textbf{Pre-training phase} (bottom): An autoencoder (AE) is pre-trained to learn noise-robust representations; Gaussian noise ($\boldsymbol{\epsilon}$) is injected into the latent vector ($\boldsymbol{z}$) and the decoder ($D_{\theta}$) reconstructs the original log-Mel spectrogram ($\boldsymbol{X}$).
+        \textbf{AEC phase} (top): At inference, the frozen encoder ($E_{\phi}^{*}$) produces a compact latent representation that modulates four LEDs. A central camera records the signal as \emph{temporal LED intensity variations}, and the downstream classifier predicts the event label ($\hat{\boldsymbol{y}}$).}
+    \label{fig:proposed_system_diagram}
+\end{figure*}

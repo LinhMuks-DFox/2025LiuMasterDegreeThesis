@@ -1,0 +1,46 @@
+\documentclass[11ptj,a4j,dvipdfmx,uplatex]{jsarticle}
+% \documentclass[10ptj,a4j,fleqn,dvipdfmx,uplatex]{jsarticle} % 数式左寄せ
+\usepackage{ykinolabthesis_eng}
+\usepackage{import}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{pngs/}}
+
+\degree{\bachelor}% \bachelor, \master, or \doctor
+\titleEN{Title}
+\dept{Tokai University \\ School of Information Science and Technology \\ Department of Human and Information Science }
+\author{Author}
+\teacher{Kinosita Yuma Associate Professor/Lecturer}
+
+
+\begin{document}
+\maketitle
+\pagestyle{plain}
+\pagenumbering{roman}
+\setcounter{page}{1}
+\input{sections/00-abstract.tex}
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+\input{./sections/00-abstract.tex}
+\newpage
+\input{./sections/01-Introduction.tex}
+\newpage
+\input{./sections/02-Problem-setting.tex}
+\newpage
+\input{./sections/04-methodology.tex}
+\newpage
+\input{./sections/05-Experiment.tex}
+\newpage
+\input{./sections/06-conclusion.tex}
+\bibliography{refer.bib}
+
+
+\end{document}

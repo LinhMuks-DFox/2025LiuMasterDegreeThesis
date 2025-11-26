@@ -1,0 +1,10 @@
+\section{Conclusion}
+\label{sec:discussion_conclusion}
+In this paper, we propose a practical sound-to-light conversion method for AEC using Blinkies.
+Conventional methods either suffer from low accuracy or face difficulties in real-world deployment due to non-differentiable physical channels.
+To overcome this, we separate the training of the feature embedding function from the physical channel and use a pre-trained autoencoder (AE) encoder for the embedding.
+For pre-training AE, a noise-robust training strategy is introduced to enhance robustness against distortion in the transmission channel.
+Simulation results show that the proposed AE-based method consistently outperforms conventional approaches across various conditions, achieving higher F$_1$ scores.
+
+Despite promising results in simulations, real-world evaluation remains a future task.
+Additionally, incorporating spatial information into the training objective and exploring other self-supervised methods like VAE or contrastive learning are potential future directions.

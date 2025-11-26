@@ -1,0 +1,72 @@
+\section{Methodology}
+\label{sec:methodology}
+
+To overcome the limitations described in the previous section, we propose a practical solution that decouples the feature embedding from the non-differentiable physical channel.
+Our approach, illustrated in Fig.~\ref{fig:proposed_system_diagram}, realizes the embedding function $\mathrm{Embed}(\cdot)$ via the encoder of a pre-trained autoencoder (AE), denoted as $E_{{\phi}^{*}}(\cdot)$.
+
+The procedure begins by transforming the raw input waveform $\boldsymbol{x}$ into a log-Mel spectrogram $\boldsymbol{X}=\mathrm{Logmel}(\boldsymbol{x})$,
+a widely adopted time-frequency representation of audio.
+The embedding function then maps the waveform to a latent vector $\boldsymbol{z}$ through the log-Mel representation:
+\begin{equation}
+    \boldsymbol{z} = \mathrm{Embed}(\boldsymbol{x}) = E_{{\phi}^{*}}(\boldsymbol{X}).
+    \label{eq:embed_ae}
+\end{equation}
+By pre-training the encoder,
+we obtain a compact yet discriminative representation that is suited for transmission,
+thereby obviating the need for end-to-end optimization through the physical channel.
+This section details the AE's learning objective, its network architecture, pre-training procedure, and training procedure for the downstream classifier.
+\footnote{All training scripts, including Autoencoder pre-training and downstream evaluation, are available at \url{https://github.com/ykinolab-tokai/multi-ae-ace}.}
+
+\subsection{Learning Objective}
+The primary objective of an AE is to distill a compact representation from a large, unlabeled audio dataset (e.g. Google AudioSet \cite{gemmeke_audio_2017}) by means of a self-supervised reconstruction task.
+A standard AE minimizes the reconstruction error between an input log-Mel spectrogram $\boldsymbol{X}$ and its reconstruction $\hat{\boldsymbol{X}}$ via
+\begin{equation}
+    \mathcal{L}_{\text{rec}} = \mathbb{E}\left[ ||\boldsymbol{X} - D_\theta(E_\phi(\boldsymbol{X}))||^2_F \right],
+    \label{eq:recon_loss}
+\end{equation}
+where $E_\phi(\cdot)$ and $D_\theta(\cdot)$ represent the encoder and decoder, respectively;
+the optimized parameters after pre-training are $(\phi^*, \theta^*)$.
+
+However, this objective does not consider the perturbation of the latent vector $E_\phi(\boldsymbol{X})$ by channel noise.
+To address this issue, we adopt a noise-robust training strategy:
+Gaussian noise $\boldsymbol{\epsilon}$ is injected into the latent vectors during training to mimic channel distortion and compel the model to produce a more resilient representation.
+The revised objective is
+\begin{equation}
+    \mathcal{L}_{\text{rec-robust}} = \mathbb{E}\left[ ||\boldsymbol{X} - D_\theta(E_\phi(\boldsymbol{X}) + \boldsymbol{\epsilon})||^2_F \right], \quad \boldsymbol{\epsilon} \sim \mathcal{N}(0, \sigma^2\mathbf{I}),
+    \label{eq:recon_loss_robust}
+\end{equation}
+thereby encouraging $E_\phi(\cdot)$ to produce channel-invariant and discriminative features.
+\subsection{AE Architecture}
+\label{subsec:ae_architecture_rationale}
+\input{sections/tables/AutoEncoder-Architecture.tex}
+The Encoder architecture, summarized in Table~\ref{tab:ae_architecture}, is a hybrid design that combines convolutional neural networks (CNNs) and self-attention.
+A 1-D convolutional layer first extracts local temporal patterns, after which a multi-head self-attention layer captures long-range dependencies, achieving a global receptive field without excessive network depth.
+A series of strided convolutional layers performs temporal downsampling before projecting the signal into an $L$-dimensional latent space.
+We choose $L$ to match the physical channel capacity, i.e.,
+$L = 15 \, \mathrm{symbol/s} \times 4 \, \mathrm{LEDs} \times 5 \mathrm{s} = 300$, where $15$\,Hz is the per-LED Nyquist rate imposed by the 30\,FPS camera.
+Unlike audio transformer models~\cite{gong2021astaudiospectrogramtransformer}, which prioritize accuracy without reducing bitrate, our AE explicitly compresses the representation to meet the optical-channel capacity.
+
+A crucial deployment constraint is the encoder's computational footprint on resource-constrained hardware.
+Our encoder contains 517,508 trainable parameters,
+occupying roughly 2.04\,MB of memory,
+and its total inference-time footprint is about 3.40\,MB.
+This is comfortably within the capacity of modern edge platforms such as the Raspberry Pi 4.
+
+\subsection{Pre-training}
+\label{subsec:ae_preprocessing}
+We aim to infer a single acoustic-event label $y$ from a set of 5-second audio waveform $\{ \boldsymbol{x}_i \}$ sampled at 16\,kHz.
+Each 10-second audio clip from the Google AudioSet~\cite{gemmeke_audio_2017} is first down-mixed to monaural and resampled to 16\,kHz.
+For data augmentation, a 5-second segment is then randomly cropped from every clip.
+A log-Mel spectrogram $\boldsymbol{X}$ is then computed from this segment, using a Hann window with a length of 400, a 160-sample hop length, and 80 Mel filters.
+
+The AE is pre-trained for 300 epochs on the balanced subset of AudioSet with the Adam optimizer~\cite{kingma_adam_2017}, an initial learning rate of $1 \times 10^{-3}$ and a batch size of 1280.
+A \texttt{ReduceLROnPlateau} learning rate scheduler lowers the learning rate by a factor of 0.1 whenever the validation loss fails to improve for 10 consecutive epochs.
+
+\subsection{Training Downstream Classifier}
+\label{subsec:classifier_training}
+To train the downstream classifier that predicts acoustic event labels
+from the transmitted data, we first record the Blinky signals corresponding to each input audio instance in the training set
+with the central camera, thereby obtaining a set of latent vectors $\{\boldsymbol{z}'_i\}$ (see Eqs.~\ref{eq:ps_embedding} and \ref{eq:ps_channel}).
+The classifier is subsequently trained to infer the target labels $y$
+from these latent representations,
+whereas the parameters of the pre-trained encoder $E_{{\phi}^{*}}$ are kept fixed throughout this phase.

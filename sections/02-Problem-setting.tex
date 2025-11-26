@@ -1,0 +1,49 @@
+\section{Problem Setting}
+\label{sec:problem_setting}
+
+We address the challenge of implementing the AEC framework using Blinkies. This section formalizes the AEC pipeline and defines the core research problem.
+
+\subsection{Formalization of AEC Framework using Blinkies}
+The AEC procedure using $N$ Blinkies consists of three sequential stages: on-device embedding ($\mathrm{Embed}(\cdot)$), optical signal transmission ($\mathrm{Transmit}(\cdot)$), and downstream classification ($\mathrm{Classify}(\cdot)$). This pipeline is expressed as:
+\begin{align}
+    \boldsymbol{z}_i  & = \mathrm{Embed}(\boldsymbol{x}_i),\label{eq:ps_embedding}                               \\
+    \boldsymbol{z'}_i & = \mathrm{Transmit}(\boldsymbol{z}_i), \label{eq:ps_channel}                             \\
+    \hat{y}           & = \mathrm{Classify}(\boldsymbol{z'}_1, \cdots, \boldsymbol{z}_N). \label{eq:ps_classify}
+\end{align}
+\input{sections/pdf-png-ref/proposal_and_conventional.tex}
+As illustrated in Fig.~\ref{fig:proposed_system_diagram},
+the $i$-th Blinky first acquires an acoustic signal $\boldsymbol{x}_i$.
+The embedding function $\mathrm{Embed}(\cdot)$ on the Blinky maps the captured signal to a feature vector $\boldsymbol{z}_i \in \mathbb{R}^{L}$, which subsequently modulates the device's LEDs.
+The resulting light signal propagates through the environment and is captured by a central camera;
+the composite process is abstracted by the function $\mathrm{Transmit}(\cdot)$.
+Finally, the classifier $\mathrm{Classify}(\cdot)$ operates on the collection of received signals $\{\boldsymbol{z'}_i\}$ to infer the acoustic event label $\hat{y}$.
+
+Within the transmission channel, Blinkies' LED signals are perturbed by ambient illumination and noise before being temporally resampled by the camera.
+Accordingly, we model the channel as the composition of a distortion operator followed by camera resampling, i.e., $\mathrm{Transmit}(\cdot) = (\mathrm{Resample} \circ \mathrm{Distort}(\cdot))$.
+The distortion is parameterized as follows:
+\begin{align}
+    \mathrm{Distort}(\boldsymbol{z}) & = a\boldsymbol{z} + b\boldsymbol{1} + \boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(0, \sigma^2\mathbf{I}), \label{eq:ps_distort}
+\end{align}
+where $a$ denotes the attenuation coefficient---inversely proportional to the squared distance between the camera and a Blinky---and $b$ captures the bias introduced by ambient light,
+whereas $\boldsymbol{\epsilon}$ represents additive white Gaussian noise with covariance $\sigma^2 \boldsymbol{I}$.
+The vector $\boldsymbol{1}$ is the $L$-dimensional all-ones vector
+and the matrix $\boldsymbol{I}$ is the identity matrix with a size of $L \times L$.
+The resampling operator $\mathrm{Resample}: \mathbb{R}^{L} \rightarrow \mathbb{R}^{N_{\text{LED}} \times \lfloor F_s \times T \rfloor}$ encapsulates the camera's temporal sampling, governed by its frame rate $F_s$, the number of LEDs per device $N_{\text{LED}}$, and the audio segment duration $T$.
+To respect the sensor's dynamic range,
+resampled values are clipped to the interval $[0, 1]$.
+
+\subsection{Challenge: Designing Embedding Function}
+Within this framework, the central challenge is to design an embedding function $\mathrm{Embed}(\cdot)$ that retains as much acoustic information as possible despite stringent bandwidth constraints and pronounced channel noise.
+To date, two principal strategies have been explored.
+
+\paragraph{Sound Power}
+The simplest method defines $\mathrm{Embed}(\cdot)$ by mapping the raw waveform $\boldsymbol{x}(t)$ to its power: $\boldsymbol{z} = (x(1)^2, x(2)^2, \cdots, x(T)^2)^\top$.
+Although computationally negligible, the downsampling process in the camera discards most of the semantic information (e.g., timbre),
+resulting in insufficient performance on AEC tasks.
+
+\paragraph{End-to-End Training Approach}
+To convey more discriminative features, Kinoshita et al.~\cite{kinoshita_end--end_2021} proposed using a DNN encoder for $\mathrm{Embed}(\cdot)$ and optimized both $\mathrm{Embed}(\cdot)$ and $\mathrm{Classify}(\cdot)$ (Eqs.~\ref{eq:ps_embedding} and \ref{eq:ps_classify}) in an end-to-end fashion.
+However, this strategy is impractical in real-world deployments:
+the transmit channel (Eq.~\ref{eq:ps_channel}) constitutes an unknown, non-differentiable physical process, thereby blocking gradient flow back to the on-device encoder.
+
+Both approaches therefore exhibit critical shortcomings: the sound-power approach is too rudimentary for high-accuracy classification, whereas the end-to-end training approach is physically unrealizable. Consequently, a practical solution is required---one that permits the transmission of expressive, learned features without necessitating differentiation through the physical channel.

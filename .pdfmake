@@ -1,0 +1,8 @@
+# .pdfmake configuration file
+#main=styled.tex
+#out=styled.pdf
+main=main.tex, styled.tex
+out=FinalPaper.tex, styled.pdf
+tool_chain = uplatex, upbibtex, uplatex, uplatex, dvipdfmx
+#tool_chain = pdflatex, biber, pdflatex, pdflatex
+

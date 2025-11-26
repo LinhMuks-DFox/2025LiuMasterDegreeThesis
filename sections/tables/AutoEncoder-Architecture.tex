@@ -1,0 +1,37 @@
+\begin{table}[t]
+    \centering
+    \caption{
+        Autoencoder architecture.
+        Output shapes are listed as $\mathrm{frequency} \ F \times \mathrm{time} \ T$.
+        Self-Attention block consists of multi-head attention layer with two heads, layer normalization, feed-forward network (FFN) that expands feature dimension from 40 to 128 and then projects it back, and layer normalization with residuals.
+        $k$, $s$, and $c$ denotes kernel size, stride, and channel,
+        respectively.
+    }
+    \label{tab:ae_architecture}
+    \begin{tabular}{l c}
+        \toprule
+        \textbf{Layer}                                & \textbf{Output Shape} ($F \times T$) \\
+        \midrule
+        \textit{Input: Log-Mel Spectrogram}           & [80, 501]                            \\
+        \midrule
+        \multicolumn{2}{l}{\textbf{Encoder} ($E_\phi$)}                                      \\
+        Conv1d (c=40, k=5, s=1), ReLU                 & [40, 497]                            \\
+        Self-Attention (embed=40, heads=2)$^*$        & [40, 497]                            \\
+        ReLU                                          & [40, 497]                            \\
+        Conv1d (c=20, k=7, s=2), ReLU                 & [20, 246]                            \\
+        Conv1d (c=20, k=11, s=3), ReLU                & [20, 79]                             \\
+        Flatten                                       & [1, 1580]                            \\
+        Linear (in\_features=1580, out\_features=300) & [1, 300]                             \\
+        \midrule
+        \multicolumn{2}{l}{\textbf{Decoder} ($D_\theta$)}                                    \\
+        Linear (in\_features=300, out\_features=1580) & [1, 1580]                            \\
+        Reshape                                       & [20, 79]                             \\
+        ConvTranspose1d (c=20, k=11, s=3), ReLU       & [20, 245]                            \\
+        ConvTranspose1d (c=40, k=7, s=2), ReLU        & [40, 495]                            \\
+        ConvTranspose1d (c=80, k=5, s=1)              & [80, 499]                            \\
+        Interpolate (target\_time\_dim=501)           & [80, 501]                            \\
+        \midrule
+        \textit{Output: Reconstructed Log-Mel}        & [80, 501]                            \\
+        \bottomrule
+    \end{tabular}
+\end{table}

@@ -1,0 +1,7 @@
+\begin{abstract}
+    In the acoustic event classification (AEC) framework that employs Blinkies, audio signals are converted into LED light emissions and subsequently captured by a single video camera. However, the 30 fps optical transmission channel conveys only about 0.2\% of the normal audio bandwidth and is highly susceptible to noise.
+    We propose a novel sound-to-light conversion method that leverages the encoder of a pre-trained autoencoder (AE) to distill compact, discriminative features from the recorded audio.
+    To pre-train the AE, we adopt a noise-robust learning strategy in which artificial noise is injected into the encoder’s latent representations during training, thereby enhancing the model’s robustness against channel noise.
+    The encoder architecture is specifically designed for the memory footprint of contemporary edge devices such as the Raspberry Pi 4.
+    In a simulation experiment on the ESC-50 dataset under a stringent 15 Hz bandwidth constraint, the proposed method achieved higher macro-F$_1$ scores than conventional sound-to-light conversion approaches.
+\end{abstract}

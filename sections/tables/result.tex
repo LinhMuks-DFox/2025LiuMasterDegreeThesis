@@ -1,0 +1,64 @@
+% \begin{table}[h]
+%     \centering
+%     \caption{
+%         Test set classification results (F1) grouped by methods. The Multi-Channel Log-Mel Spectrogram serves as a theoretical upper bound.
+%         \textit{Pure Latent} refers to encoder outputs directly used for classification, without visual simulation;
+%         \textit{CRF} denotes camera resampling only, excluding air propagation effects.
+%         \textit{SP} and \textit{E2E} refers to `sound power' and `End-to-End', respectively.
+%     }
+
+%     \label{tab:exp_results_f1}
+%     \begin{tabular}{llc}
+%         \toprule
+%         \textbf{Index} & \textbf{Method Description}               & \textbf{F1 (mean $\pm$ std)} \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{Upper Bound}}                                                  \\
+%         1              & Multi-Channel Log-Mel Spectrogram (ideal) & 0.9949                       \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{Autoencoder (Ours)}}                                           \\
+%         2              & Pure Latent                               & 0.6842 $\pm$ 0.0448          \\
+%         3              & AE / CRF                                  & 0.6696 $\pm$ 0.0109          \\
+%         4              & AE / CRF / Distort(std=0.05, bias=0.1)    & 0.5227 $\pm$ 0.0206          \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{Noise-Robust Autoencoder (Ours)}}                              \\
+%         5              & Pure Latent                               & \textbf{0.7248} $\pm$ 0.0405 \\
+%         6              & AE / CRF                                  & \textbf{0.7279} $\pm$ 0.0201 \\
+%         7              & AE / CRF / Distort(std=0.05, bias=0.1)    & \textbf{0.5357} $\pm$ 0.0178 \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{Sound power (Conventional, Baseline)}}                         \\
+%         8              & SP / CRF                                  & 0.3976 $\pm$ 0.0189          \\
+%         9              & SP / CRF / Distort(std=0.05, bias=0.1)    & 0.3359 $\pm$ 0.0238          \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{End-to-End (Kinoshita et al.)}}                                \\
+%         10             & E2E / CRF                                 & 0.4965 $\pm$ 0.0731          \\
+%         11             & E2E / CRF / Distort(std=0.05, bias=0.1)   & 0.3077 $\pm$ 0.0705          \\
+%         \midrule
+%         \multicolumn{3}{l}{\textit{ESC-50 Human Benchmark}}                                       \\
+%         12             & Human Classification                      & 0.8130                       \\
+%         \bottomrule
+%     \end{tabular}
+% \end{table}
+% For a two-column paper format, table* spans both columns.
+% If your paper is single-column, you can change it back to 'table'.
+\begin{table*}[h]
+    \centering
+    \caption{Macro-averaged F$_1$ score (mean $\pm$ std. across four independent trials) on test set under three transmission conditions:
+        no degradation $\mathrm{Transmit}(\boldsymbol{z}) = \boldsymbol{z}$ (\textit{Ideal channel}),
+        resampling $\mathrm{Transmit}(\boldsymbol{z}) = \mathrm{Resample}(\boldsymbol{z})$ (\textit{Resample}),
+        and resampling with distortions
+        $\mathrm{Transmit}(\boldsymbol{z}) = (\mathrm{Resample} \circ \mathrm{Distort})(\boldsymbol{z})$ (\textit{Resample + Distort}). Definitions of each embedding method are provided in Section~\ref{subsec:exp_setup}.}
+    \label{tab:exp_results_f1}
+    \begin{tabular}{l c c c}
+        \toprule
+        \textbf{Embedding method}                      & \textbf{Ideal channel}       & \textbf{Resample}            & \textbf{Resample + Distort}  \\
+        \midrule
+        \textit{Log-Mel spectrogram without embedding} & 0.9949                       & ---                          & ---                          \\
+        \textit{Sound Power}                           & ---                          & 0.3976 $\pm$ 0.0189          & 0.3359 $\pm$ 0.0238          \\
+        \textit{End-to-End}                            & ---                          & 0.4965 $\pm$ 0.0731          & 0.3077 $\pm$ 0.0705          \\
+        \textit{Autoencoder}                           & 0.6842 $\pm$ 0.0448          & 0.6696 $\pm$ 0.0109          & 0.5227 $\pm$ 0.0206          \\
+        \textit{Noise-Robust Autoencoder (Ours)}       & \textbf{0.7248 $\pm$ 0.0405} & \textbf{0.7279 $\pm$ 0.0201} & \textbf{0.5357 $\pm$ 0.0178} \\
+        \midrule
+        \textit{ESC-50 Human Benchmark}                & \multicolumn{3}{c}{0.8130}                                                                 \\
+        \bottomrule
+    \end{tabular}
+\end{table*}
