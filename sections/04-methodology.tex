@@ -1,8 +1,10 @@
 \section{Methodology}
 \label{sec:methodology}
-\input{sections/pdf-png-ref/proposal_and_conventional.tex}
 To overcome the limitations described in the previous section, we propose a practical solution that decouples the feature embedding from the non-differentiable physical channel.
 Our approach, illustrated in Fig.~\ref{fig:proposed_system_diagram}, realizes the embedding function $\mathrm{Embed}(\cdot)$ via the encoder of a pre-trained autoencoder (AE), denoted as $E_{{\phi}^{*}}(\cdot)$.
+
+\input{sections/pdf-png-ref/proposal_and_conventional.tex}
+
 
 The procedure begins by transforming the raw input waveform $\boldsymbol{x}$ into a log-Mel spectrogram $\boldsymbol{X}=\mathrm{Logmel}(\boldsymbol{x})$,
 a widely adopted time-frequency representation of audio.

@@ -2,10 +2,9 @@
 \label{sec:experiments}
 
 We evaluated the efficacy of our AE–based sound-to-light conversion for AEC through a simulation study.
-
+The experimental design rests on a straightforward premise: embedding functions that generate more discriminative features should yield latent representations $\boldsymbol{z}$ that result in a superior classification performance (e.g.\, macro F1-score).
 \subsection{Experimental Setup}
 \label{subsec:exp_setup}
-
 The experiments were conducted in a simulated rectangular room measuring $8 \times 6 \times 4\,\text{m}^{3}$, where five Blinkies were deployed.
 The process of estimating the class label $\hat{y}$ from the waveform $\boldsymbol{x}_i$ received by the $i$-th Blinky follows the procedure
 outlined in Eqs.~\ref{eq:ps_embedding} to \ref{eq:ps_classify}.
