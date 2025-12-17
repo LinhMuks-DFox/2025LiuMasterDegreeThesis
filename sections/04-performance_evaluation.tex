@@ -1,4 +1,4 @@
-\section{Experiments}
+\section{Performance Evaluation}
 \label{sec:experiments}
 
 We evaluated the efficacy of our AE–based sound-to-light conversion for AEC through a simulation study.
@@ -73,4 +73,7 @@ Designing a loss function that explicitly preserves spatial information could yi
 Another limitation of this study is that our evaluation focuses exclusively on single-event clips and does not address scenarios in which two or more acoustic events occur simultaneously. This work primarily emphasizes validating whether the proposed method functions as intended, rather than exhaustively delineating its operational boundaries; therefore, multi-event classification is deferred to future investigations. Nevertheless, since the downstream classifier is trained with BC learning—thereby being exposed to mixtures and soft labels—the resulting decision function is capable of handling mixed inputs to some extent, indicating a promising potential for the recognition of concurrent events in more complex environments.
 
 It is further assumed that each Blinky transforms its recorded audio into a low-dimensional vector within a shared 5-second time window, and it is not assumed that recordings occur over differing temporal intervals across devices. However, this assumption may not hold in practical deployments, where device-specific asynchrony can arise. Consequently, the design of robust synchronization mechanisms and the development of training or inference strategies resilient to temporal misalignment represent important avenues for future research.
+
+In addition to temporal considerations, there is a limitation regarding the spatial dimension of the input data. Currently, the training data is down-mixed to mono-channel by calculating the sample mean of the channels. However, given that each Blinky device is equipped with two fixed-position microphones designed to capture spatial cues, this down-mixing process discards potentially valuable spatial information. Future iterations will aim to fully leverage these on-device spatial characteristics.
+
 Finally, although we employed an autoencoder for unsupervised representation learning, alternative methods---such as generative approaches (e.g., variational autoencoders) and contrastive learning objectives---warrant investigation.

@@ -4,8 +4,9 @@
 \usepackage{import}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \graphicspath{{pngs/}}
-
+\renewcommand{\appendixname}{Appendix}
 \degree{\master}% \bachelor, \master, or \doctor
 \titleEN{Pre-training Autoencoder for Acoustic Event Classification via Blinky}
 \dept{Tokai University 
@@ -37,11 +38,16 @@
 \newpage
 \input{./sections/02-Problem-setting.tex}
 \newpage
-\input{./sections/04-methodology.tex}
+\input{./sections/03-methodology.tex}
 \newpage
-\input{./sections/05-Experiment.tex}
+\input{./sections/04-performance_evaluation.tex}
+\newpage
+\input{./sections/05-latent_space.tex}
 \newpage
 \input{./sections/06-conclusion.tex}
+\newpage
+\input{./sections/07-appendix.tex}
+
 \bibliography{refer.bib}
 
 
