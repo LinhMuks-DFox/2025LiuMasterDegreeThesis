@@ -2,7 +2,7 @@
 #main=styled.tex
 #out=styled.pdf
 main=main.tex, styled.tex
-out=FinalPaper.tex, styled.pdf
+out=FinalPaper.tex, 2025MasterThesisXiaoyangLiu.pdf
 tool_chain = uplatex, upbibtex, uplatex, uplatex, dvipdfmx
 #tool_chain = pdflatex, biber, pdflatex, pdflatex
 
