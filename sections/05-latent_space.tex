@@ -1,7 +1,7 @@
 \section{Visualization of Latent Representations}
 \label{sec:analysis}
 
-While in~\ref{sec:experiments} demonstrates the superior classification performance of the proposed method under limited bandwidth, the internal mechanism of the autoencoder remains a "black box." Specifically, it is unclear what features the encoder prioritizes when compressing audio into such a compact latent space (15 Hz) without semantic supervision. This section investigates the intrinsic structure of the latent space through visualization and quantitative acoustic verification.
+While in~\ref{sec:experiments} demonstrates the superior classification performance of the proposed method under limited bandwidth, the internal mechanism of the autoencoder remains a ``black box''. Specifically, it is unclear what features the encoder prioritizes when compressing audio into such a compact latent space (15 Hz) without semantic supervision. This section investigates the intrinsic structure of the latent space through visualization and quantitative acoustic verification.
 
 \subsection{Global Latent Geometry Visualization}
 \label{subsec:visualization}
@@ -35,4 +35,4 @@ The determinant of the optimal rotation matrix was calculated to be $\det(\mathb
 \subsection{Discussion}
 This result ($\det(\mathbf{Q}) \approx 1$) implied that $\mathbf{Z}_{norm}$ and $\mathbf{Z}_{rob}$ can be aligned almost perfectly through a simple proper rotation. This suggests that the injection of Gaussian noise into the latent variables during training does not fundamentally alter the topology of the learned manifold. The average sample-wise cosine similarity between paired samples, however, is not exactly $1$, and the residual reconstruction error (Frobenius norm) is non-zero (about 0.23), which we interpret as small but systematic geometric deviations between the two manifolds.
 
-Given the superior classification performance demonstrated in Section~\ref{sec:experiments}, we \textbf{hypothesize} that while the global geometric structure remains largely invariant, these minute deviations represent a refinement of the feature space. It is precisely these subtle structural adjustments that equip the Autoencoder with its observed resilience to channel noise.
+Given the superior classification performance demonstrated in Section~\ref{sec:experiments}, we \textbf{hypothesize} that while the global geometric structure remains largely invariant, these minute deviations represent a refinement of the feature space. It is precisely these subtle structural adjustments that equip the autoencoder with its observed resilience to channel noise.
